@@ -33,6 +33,24 @@
       "message": "testing +2",
       "revId": "577e814bca465d555ac039146a1324226af341a2",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f401c108_4151c877",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1014668
+      },
+      "writtenOn": "2022-06-08T03:15:54Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ab6c0fcb_e3792c36",
+      "revId": "577e814bca465d555ac039146a1324226af341a2",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ],
   "submitRequirementResults": []
