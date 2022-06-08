@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c57fc386_ebb17d2e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1020265
+      },
+      "writtenOn": "2022-06-08T06:13:52Z",
+      "side": 1,
+      "message": "LGTM. I\u0027d like @bschwind\u0027s opinion, too",
+      "revId": "e9ad2d10d24e227216b10c4bc39980bf3481f311",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "440dd115_70a22e15",
+        "filename": "examples/media_pipeline.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1020265
+      },
+      "writtenOn": "2022-06-08T06:13:52Z",
+      "side": 1,
+      "message": "This is a good idea.",
+      "revId": "e9ad2d10d24e227216b10c4bc39980bf3481f311",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
