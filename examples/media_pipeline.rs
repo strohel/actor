@@ -53,18 +53,18 @@ mod actors {
     }
 
     // Egress pipeline
-    pub struct VideoCaptureActor {
+    pub struct VideoCapturer {
         frame_counter: usize,
         next: Recipient<MediaFrame>,
     }
 
-    impl VideoCaptureActor {
+    impl VideoCapturer {
         pub fn new(next: Recipient<MediaFrame>) -> Self {
             Self { frame_counter: 0, next }
         }
     }
 
-    impl Actor for VideoCaptureActor {
+    impl Actor for VideoCapturer {
         type Context = Context<Self::Message>;
         type Error = Error;
         type Message = VideoCaptureMessage;
@@ -93,17 +93,17 @@ mod actors {
         }
     }
 
-    pub struct VideoEncodeActor {
+    pub struct VideoEncoder {
         next: Recipient<EncodedMediaFrame>,
     }
 
-    impl VideoEncodeActor {
+    impl VideoEncoder {
         pub fn new(next: Recipient<EncodedMediaFrame>) -> Self {
             Self { next }
         }
     }
 
-    impl Actor for VideoEncodeActor {
+    impl Actor for VideoEncoder {
         type Context = Context<Self::Message>;
         type Error = Error;
         type Message = MediaFrame;
@@ -132,18 +132,18 @@ mod actors {
         }
     }
 
-    pub struct AudioCaptureActor {
+    pub struct AudioCapturer {
         frame_counter: usize,
         next: Recipient<MediaFrame>,
     }
 
-    impl AudioCaptureActor {
+    impl AudioCapturer {
         pub fn new(next: Recipient<MediaFrame>) -> Self {
             Self { frame_counter: 0, next }
         }
     }
 
-    impl Actor for AudioCaptureActor {
+    impl Actor for AudioCapturer {
         type Context = Context<Self::Message>;
         type Error = Error;
         type Message = AudioCaptureMessage;
@@ -173,17 +173,17 @@ mod actors {
         }
     }
 
-    pub struct AudioEncodeActor {
+    pub struct AudioEncoder {
         next: Recipient<EncodedMediaFrame>,
     }
 
-    impl AudioEncodeActor {
+    impl AudioEncoder {
         pub fn new(next: Recipient<EncodedMediaFrame>) -> Self {
             Self { next }
         }
     }
 
-    impl Actor for AudioEncodeActor {
+    impl Actor for AudioEncoder {
         type Context = Context<Self::Message>;
         type Error = Error;
         type Message = MediaFrame;
@@ -212,17 +212,17 @@ mod actors {
         }
     }
 
-    pub struct NetworkSenderActor {
+    pub struct NetworkSender {
         next: Recipient<EncodedMediaFrame>,
     }
 
-    impl NetworkSenderActor {
+    impl NetworkSender {
         pub fn new(next: Recipient<EncodedMediaFrame>) -> Self {
             Self { next }
         }
     }
 
-    impl Actor for NetworkSenderActor {
+    impl Actor for NetworkSender {
         type Context = Context<Self::Message>;
         type Error = Error;
         type Message = EncodedMediaFrame;
@@ -245,12 +245,12 @@ mod actors {
     }
 
     // Ingress pipeline
-    pub struct NetworkReceiverActor {
+    pub struct NetworkReceiver {
         audio_next: Recipient<EncodedMediaFrame>,
         video_next: Recipient<EncodedMediaFrame>,
     }
 
-    impl NetworkReceiverActor {
+    impl NetworkReceiver {
         pub fn new(
             audio_next: Recipient<EncodedMediaFrame>,
             video_next: Recipient<EncodedMediaFrame>,
@@ -259,7 +259,7 @@ mod actors {
         }
     }
 
-    impl Actor for NetworkReceiverActor {
+    impl Actor for NetworkReceiver {
         type Context = Context<Self::Message>;
         type Error = Error;
         type Message = EncodedMediaFrame;
@@ -286,17 +286,17 @@ mod actors {
         }
     }
 
-    pub struct VideoDecodeActor {
+    pub struct VideoDecoder {
         next: Recipient<MediaFrame>,
     }
 
-    impl VideoDecodeActor {
+    impl VideoDecoder {
         pub fn new(next: Recipient<MediaFrame>) -> Self {
             Self { next }
         }
     }
 
-    impl Actor for VideoDecodeActor {
+    impl Actor for VideoDecoder {
         type Context = Context<Self::Message>;
         type Error = Error;
         type Message = EncodedMediaFrame;
@@ -323,17 +323,17 @@ mod actors {
         }
     }
 
-    pub struct AudioDecodeActor {
+    pub struct AudioDecoder {
         next: Recipient<MediaFrame>,
     }
 
-    impl AudioDecodeActor {
+    impl AudioDecoder {
         pub fn new(next: Recipient<MediaFrame>) -> Self {
             Self { next }
         }
     }
 
-    impl Actor for AudioDecodeActor {
+    impl Actor for AudioDecoder {
         type Context = Context<Self::Message>;
         type Error = Error;
         type Message = EncodedMediaFrame;
@@ -360,15 +360,15 @@ mod actors {
         }
     }
 
-    pub struct AudioPlaybackActor {}
+    pub struct AudioPlayback {}
 
-    impl AudioPlaybackActor {
+    impl AudioPlayback {
         pub fn new() -> Self {
             Self {}
         }
     }
 
-    impl Actor for AudioPlaybackActor {
+    impl Actor for AudioPlayback {
         type Context = Context<Self::Message>;
         type Error = Error;
         type Message = MediaFrame;
@@ -395,15 +395,15 @@ mod actors {
         }
     }
 
-    pub struct VideoDisplayActor {}
+    pub struct VideoDisplay {}
 
-    impl VideoDisplayActor {
+    impl VideoDisplay {
         pub fn new() -> Self {
             Self {}
         }
     }
 
-    impl Actor for VideoDisplayActor {
+    impl Actor for VideoDisplay {
         type Context = Context<Self::Message>;
         type Error = Error;
         type Message = MediaFrame;
@@ -464,26 +464,25 @@ fn main() -> Result<(), Error> {
     let display_addr = Addr::default();
 
     // Receiving side
-    let audio_playback_actor = system.spawn(AudioPlaybackActor::new())?;
+    let audio_playback_actor = system.spawn(AudioPlayback::new())?;
 
-    let video_decode_addr = system.spawn(VideoDecodeActor::new(display_addr.recipient()))?;
-    let audio_decode_addr =
-        system.spawn(AudioDecodeActor::new(audio_playback_actor.recipient()))?;
+    let video_decode_addr = system.spawn(VideoDecoder::new(display_addr.recipient()))?;
+    let audio_decode_addr = system.spawn(AudioDecoder::new(audio_playback_actor.recipient()))?;
 
-    let network_receiver_addr = system.spawn(NetworkReceiverActor::new(
+    let network_receiver_addr = system.spawn(NetworkReceiver::new(
         audio_decode_addr.recipient(),
         video_decode_addr.recipient(),
     ))?;
 
     // Sending side
     let network_sender_addr =
-        system.spawn(NetworkSenderActor::new(network_receiver_addr.recipient()))?;
+        system.spawn(NetworkSender::new(network_receiver_addr.recipient()))?;
 
-    let video_encode_addr = system.spawn(VideoEncodeActor::new(network_sender_addr.recipient()))?;
-    let audio_encode_addr = system.spawn(AudioEncodeActor::new(network_sender_addr.recipient()))?;
+    let video_encode_addr = system.spawn(VideoEncoder::new(network_sender_addr.recipient()))?;
+    let audio_encode_addr = system.spawn(AudioEncoder::new(network_sender_addr.recipient()))?;
 
-    let video_capture_addr = system.spawn(VideoCaptureActor::new(video_encode_addr.recipient()))?;
-    let audio_capture_addr = system.spawn(AudioCaptureActor::new(audio_encode_addr.recipient()))?;
+    let video_capture_addr = system.spawn(VideoCapturer::new(video_encode_addr.recipient()))?;
+    let audio_capture_addr = system.spawn(AudioCapturer::new(audio_encode_addr.recipient()))?;
 
     // Kick off the pipeline
     audio_capture_addr.send(AudioCaptureMessage::Capture)?;
@@ -491,7 +490,7 @@ fn main() -> Result<(), Error> {
 
     // The display actor may spawn an OS window which in some cases must run
     // on the main application thread.
-    let display_actor = VideoDisplayActor::new();
+    let display_actor = VideoDisplay::new();
     system.prepare(display_actor).with_addr(display_addr).run_and_block()?;
 
     Ok(())
