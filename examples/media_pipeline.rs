@@ -18,6 +18,7 @@ pub enum EncodedMediaFrame {
 mod actors {
     use crate::{EncodedMediaFrame, MediaFrame};
     use anyhow::{bail, Error};
+    use log::info;
     use std::{thread, time::Duration};
     use tonari_actor::{Actor, Context, Recipient};
 
@@ -98,7 +99,8 @@ mod actors {
     }
 
     impl VideoEncoder {
-        pub fn new(next: Recipient<EncodedMediaFrame>) -> Self {
+        pub fn new(next: Recipient<EncodedMediaFrame>, message: &str) -> Self {
+            info!("VideoEncoder starting: {message}.");
             Self { next }
         }
     }
@@ -178,7 +180,8 @@ mod actors {
     }
 
     impl AudioEncoder {
-        pub fn new(next: Recipient<EncodedMediaFrame>) -> Self {
+        pub fn new(next: Recipient<EncodedMediaFrame>, message: &str) -> Self {
+            info!("AudioEncoder starting: {message}.");
             Self { next }
         }
     }
@@ -479,8 +482,10 @@ fn main() -> Result<(), Error> {
         system.spawn(NetworkSender::new(network_receiver_addr.recipient()))?;
 
     // I really want to initialize audio first.
-    let audio_encode_addr = system.spawn(AudioEncoder::new(network_sender_addr.recipient()))?;
-    let video_encode_addr = system.spawn(VideoEncoder::new(network_sender_addr.recipient()))?;
+    let audio_encode_addr =
+        system.spawn(AudioEncoder::new(network_sender_addr.recipient(), "hello"))?;
+    let video_encode_addr =
+        system.spawn(VideoEncoder::new(network_sender_addr.recipient(), "hi"))?;
 
     // Dtto. :]
     let audio_capture_addr = system.spawn(AudioCapturer::new(audio_encode_addr.recipient()))?;
