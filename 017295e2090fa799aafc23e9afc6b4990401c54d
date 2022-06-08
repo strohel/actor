@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8abb3c68_a2ba2a82",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1020265
+      },
+      "writtenOn": "2022-06-08T06:17:45Z",
+      "side": 1,
+      "message": "I eat pinapples everyday",
+      "revId": "017295e2090fa799aafc23e9afc6b4990401c54d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0b4e5f9_f113d267",
+        "filename": "examples/media_pipeline.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1020265
+      },
+      "writtenOn": "2022-06-08T06:17:45Z",
+      "side": 1,
+      "message": "Let\u0027s add a comment explaining why audio needs to spawn first?",
+      "range": {
+        "startLine": 482,
+        "startChar": 8,
+        "endLine": 482,
+        "endChar": 25
+      },
+      "revId": "017295e2090fa799aafc23e9afc6b4990401c54d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97923ca0_c35b4441",
+        "filename": "examples/media_pipeline.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1020265
+      },
+      "writtenOn": "2022-06-08T06:17:45Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "017295e2090fa799aafc23e9afc6b4990401c54d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
