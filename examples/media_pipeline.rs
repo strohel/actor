@@ -478,11 +478,11 @@ fn main() -> Result<(), Error> {
     let network_sender_addr =
         system.spawn(NetworkSender::new(network_receiver_addr.recipient()))?;
 
-    let video_encode_addr = system.spawn(VideoEncoder::new(network_sender_addr.recipient()))?;
     let audio_encode_addr = system.spawn(AudioEncoder::new(network_sender_addr.recipient()))?;
+    let video_encode_addr = system.spawn(VideoEncoder::new(network_sender_addr.recipient()))?;
 
-    let video_capture_addr = system.spawn(VideoCapturer::new(video_encode_addr.recipient()))?;
     let audio_capture_addr = system.spawn(AudioCapturer::new(audio_encode_addr.recipient()))?;
+    let video_capture_addr = system.spawn(VideoCapturer::new(video_encode_addr.recipient()))?;
 
     // Kick off the pipeline
     audio_capture_addr.send(AudioCaptureMessage::Capture)?;
