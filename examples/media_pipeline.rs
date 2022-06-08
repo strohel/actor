@@ -485,8 +485,8 @@ fn main() -> Result<(), Error> {
     let video_capture_addr = system.spawn(VideoCapturer::new(video_encode_addr.recipient()))?;
 
     // Kick off the pipeline
-    audio_capture_addr.send(AudioCaptureMessage::Capture)?;
     video_capture_addr.send(VideoCaptureMessage::Capture)?;
+    audio_capture_addr.send(AudioCaptureMessage::Capture)?;
 
     // The display actor may spawn an OS window which in some cases must run
     // on the main application thread.
